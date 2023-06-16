@@ -20,6 +20,32 @@ class MyCustomComponent : public Component, public tzsp::TZSPSender {
 
 ```
 
+```python
+
+import esphome.codegen as cg
+import esphome.config_validation as cv
+from esphome.const import CONF_ID
+from esphome.components import tzsp
+
+AUTO_LOAD = ["tzsp"]
+DEPENDENCIES = ["tzsp"]
+
+mycustomcomponent_ns = cg.esphome_ns.namespace("mycustomcomponent")
+MyCustomComponent = mycustomcomponent_ns.class_("MyCustomComponent", cg.Component)
+
+CONFIG_SCHEMA = cv.Schema(
+    {
+        cv.GenerateID(): cv.declare_id(MyCustomComponent)
+    }
+).extend(cv.COMPONENT_SCHEMA).extend(tzsp.TZSP_SENDER_SCHEMA)
+
+async def to_code(config):
+    var = cg.new_Pvariable(config[CONF_ID])
+    await cg.register_component(var, config)
+    await tzsp.register_tzsp_sender(var, config)
+
+```
+
 ```yaml
 
 external_components:
