@@ -17,7 +17,7 @@ class TZSPSender {
   public:
     TZSPSender() = default;
 
-    void set_tzsp_ip(const network::IPAddress ip) { this->tzsp_sockaddr_in_.sin_addr.s_addr = ip; }
+    void set_tzsp_ip(const network::IPAddress ip) { this->tzsp_sockaddr_in_.sin_addr.s_addr = static_cast<ip_addr_t>(ip).addr; }
     void set_tzsp_port(uint16_t port) { this->tzsp_sockaddr_in_.sin_port = htons(port); }
     void set_tzsp_protocol(uint16_t protocol) { this->tzsp_protocol_ = htons(protocol); }
 
