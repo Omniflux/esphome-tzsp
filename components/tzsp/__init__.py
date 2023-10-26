@@ -24,7 +24,7 @@ TZSP_SENDER_SCHEMA = cv.Schema(
 )
 
 async def register_tzsp_sender(var, config):
-    if (config[CONF_TZSP]):
+    if CONF_TZSP in config:
         cg.add(var.set_tzsp_ip(config[CONF_TZSP][CONF_TZSP_IP].args))
         cg.add(var.set_tzsp_port(config[CONF_TZSP][CONF_TZSP_PORT]))
         cg.add(var.set_tzsp_protocol(config[CONF_TZSP][CONF_TZSP_PROTOCOL]))
