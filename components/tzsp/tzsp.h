@@ -10,6 +10,8 @@
 namespace esphome {
 namespace tzsp {
 
+static const auto TAG = "tzsp";
+
 constexpr u_int16_t TZSP_PORT = 0x9090;
 constexpr u_int8_t TZSP_HEADER_LENGTH = 5;
 
@@ -35,6 +37,18 @@ class TZSPSender {
         }
       }
     }
+
+  void dump_config() {
+    if (this->tzsp_sockaddr_in_.sin_addr.s_addr != ESPHOME_INADDR_ANY)
+    {
+        char buf[INET_ADDRSTRLEN];
+        inet_ntop(this->tzsp_sockaddr_in_.sin_family, &this->tzsp_sockaddr_in_.sin_addr, buf, INET_ADDRSTRLEN);
+
+        ESP_LOGCONFIG(TAG, "TZSP:");
+        ESP_LOGCONFIG(TAG, "  Destination: %s:%u", buf, ntohs(this->tzsp_sockaddr_in_.sin_port));
+        ESP_LOGCONFIG(TAG, "  Protocol: %u", ntohs(this->tzsp_protocol_));
+    }
+  }
 
   protected:
     uint16_t tzsp_protocol_{};
