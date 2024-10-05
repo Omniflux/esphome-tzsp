@@ -29,16 +29,21 @@ class TZSPSender {
     void set_tzsp_protocol(uint16_t protocol) { this->tzsp_protocol_ = htons(protocol); }
 
     template<class T>
-    void tzsp_send(const T& container) {
+    void tzsp_send(const T& container, const uint16_t protocol) {
       if (this->tzsp_sockaddr_in_.sin_addr.s_addr != ESPHOME_INADDR_ANY && sys_thread_tcpip(LWIP_CORE_IS_TCPIP_INITIALIZED))
       {
         if (!this->tzsp_socket_)
           this->tzsp_socket_ = socket::socket(AF_INET, SOCK_DGRAM, IPPROTO_IP);
 
-        std::vector<uint8_t> buffer { 1, 1, static_cast<uint8_t>(this->tzsp_protocol_), static_cast<uint8_t>(this->tzsp_protocol_ >> 8), 1 };
+        std::vector<uint8_t> buffer { 1, 1, static_cast<uint8_t>(protocol), static_cast<uint8_t>(protocol >> 8), 1 };
         buffer.insert(buffer.end(), std::begin(container), std::end(container));
         this->tzsp_socket_->sendto(buffer.data(), buffer.size(), 0, reinterpret_cast<sockaddr*>(&this->tzsp_sockaddr_in_), sizeof(this->tzsp_sockaddr_in_));
       }
+    }
+
+    template<class T>
+    void tzsp_send(const T& container) {
+      tzsp_send(container, this->tzsp_protocol_);
     }
 
   protected:
