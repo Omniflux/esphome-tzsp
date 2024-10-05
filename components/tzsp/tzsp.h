@@ -19,8 +19,8 @@ namespace tzsp {
     ESP_LOGCONFIG(TAG, "%s  Protocol: %u", prefix, ntohs((obj)->tzsp_protocol_)); \
   }
 
-constexpr u_int16_t TZSP_PORT = 0x9090;
-constexpr u_int8_t TZSP_HEADER_LENGTH = 5;
+constexpr uint16_t TZSP_PORT = 0x9090;
+constexpr uint8_t TZSP_HEADER_LENGTH = 5;
 
 class TZSPSender {
   public:
