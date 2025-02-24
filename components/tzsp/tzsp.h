@@ -25,6 +25,7 @@ constexpr uint8_t TZSP_HEADER_LENGTH = 5;
 class TZSPSender {
   public:
     void set_tzsp_ip(const network::IPAddress& ip) { this->tzsp_sockaddr_in_.sin_addr.s_addr = static_cast<ip_addr_t>(ip).addr; }
+    void set_tzsp_ip(const char *ip) { set_tzsp_ip(network::IPAddress(ip)); }
     void set_tzsp_port(uint16_t port) { this->tzsp_sockaddr_in_.sin_port = htons(port); }
     void set_tzsp_protocol(uint16_t protocol) { this->tzsp_protocol_ = htons(protocol); }
 

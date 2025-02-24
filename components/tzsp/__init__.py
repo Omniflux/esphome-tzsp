@@ -15,7 +15,7 @@ TZSP_SENDER_SCHEMA = cv.Schema(
     {
         cv.Optional(CONF_TZSP): cv.Schema(
             {
-                cv.Required(CONF_TZSP_IP): cv.ipv4,
+                cv.Required(CONF_TZSP_IP): cv.ipaddress,
                 cv.Optional(CONF_TZSP_PORT, default=0x9090): cv.port,
                 cv.Optional(CONF_TZSP_PROTOCOL, default=0): cv.int_range(0, 65535),
             }
@@ -25,6 +25,6 @@ TZSP_SENDER_SCHEMA = cv.Schema(
 
 async def register_tzsp_sender(var, config):
     if CONF_TZSP in config:
-        cg.add(var.set_tzsp_ip(config[CONF_TZSP][CONF_TZSP_IP].args))
+        cg.add(var.set_tzsp_ip(str(config[CONF_TZSP][CONF_TZSP_IP])))
         cg.add(var.set_tzsp_port(config[CONF_TZSP][CONF_TZSP_PORT]))
         cg.add(var.set_tzsp_protocol(config[CONF_TZSP][CONF_TZSP_PROTOCOL]))
