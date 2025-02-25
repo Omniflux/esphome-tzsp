@@ -30,7 +30,7 @@ class TZSPSender {
     void set_tzsp_protocol(uint16_t protocol) { this->tzsp_protocol_ = htons(protocol); }
 
     template<class T>
-    void tzsp_send(const T& container, const uint16_t protocol) {
+    void tzsp_send(const T& container, const uint16_t protocol) const {
       if (this->tzsp_sockaddr_in_.sin_addr.s_addr != ESPHOME_INADDR_ANY && sys_thread_tcpip(LWIP_CORE_IS_TCPIP_INITIALIZED))
       {
         if (!this->tzsp_socket_)
@@ -38,18 +38,18 @@ class TZSPSender {
 
         std::vector<uint8_t> buffer { 1, 1, static_cast<uint8_t>(protocol), static_cast<uint8_t>(protocol >> 8), 1 };
         buffer.insert(buffer.end(), std::begin(container), std::end(container));
-        this->tzsp_socket_->sendto(buffer.data(), buffer.size(), 0, reinterpret_cast<sockaddr*>(&this->tzsp_sockaddr_in_), sizeof(this->tzsp_sockaddr_in_));
+        this->tzsp_socket_->sendto(buffer.data(), buffer.size(), 0, reinterpret_cast<const sockaddr*>(&this->tzsp_sockaddr_in_), sizeof(this->tzsp_sockaddr_in_));
       }
     }
 
     template<class T>
-    void tzsp_send(const T& container) {
+    void tzsp_send(const T& container) const {
       tzsp_send(container, this->tzsp_protocol_);
     }
 
   protected:
     uint16_t tzsp_protocol_{};
-    std::unique_ptr<socket::Socket> tzsp_socket_{};
+    mutable std::unique_ptr<socket::Socket> tzsp_socket_{};
     struct sockaddr_in tzsp_sockaddr_in_ { sizeof(struct sockaddr_in), AF_INET, htons(TZSP_PORT), { ESPHOME_INADDR_ANY }, 0 };
     static_assert(offsetof(sockaddr_in, sin_family) != 0, "sin_size removed from sockaddr_in - fix initializer");
 };
